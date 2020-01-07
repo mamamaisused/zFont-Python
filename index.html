@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
+<body>
+    <canvas class="zdog-canvas" width="600" height="480"></canvas>
+</body>
+
+<script src="./js/zfont.min.js"></script>
+
+<script>
+
+const pi = 3.141592654;
+
+const cubeSize = 200;
+
+const lineWidth = 15;
+
+let isSpinning = true;
+
+Zfont.init(Zdog);
+
+let myFont = new Zdog.Font({
+  src: './font/Elements.ttf'
+});
+
+let illo = new Zdog.Illustration({
+  element: '.zdog-canvas',
+  dragRotate: true,
+  onDragStart: function() {
+    isSpinning = false;
+  },
+});
+
+new Zdog.Text({
+  addTo: illo,
+  font: myFont,
+  textAlign: 'center',
+  textBaseline: 'middle',
+  stroke: 2,
+  value: 'wingbow',
+  fill:true,
+  fontSize: 100,
+  color: '#636'
+});
+
+new Zdog.Text({
+  addTo: illo,
+  font: myFont,
+  textAlign: 'center',
+  textBaseline: 'middle',
+  translate: {x: -0, y: 0, z: -10 },
+  stroke: 2,
+  value: 'wingbow',
+  fill:true,
+  fontSize: 100,
+  color: '#000'
+});
+
+// square
+//let box = new Zdog.Box({
+// addTo: illo,
+//  width: cubeSize,
+//  height: cubeSize,
+//  depth: cubeSize,
+//  stroke: false,
+//  color: '#C25', // default face color
+//  leftFace: '#EA0',
+//  rightFace: '#E62',
+//  topFace: '#ED0',
+//  bottomFace: '#636',
+//});
+var p = 0;
+
+illo.rotate.x = pi/12;
+
+function animate() {
+   
+
+            illo.rotate.y +=  0.01;
+            illo.updateRenderGraph();
+			illo.updateRenderGraph();
+			requestAnimationFrame(animate);
+
+
+
+}
+animate();
+
+</script>
+</html>
