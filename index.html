@@ -73,7 +73,7 @@
     illos.forEach((element, index) => {
       element.updateRenderGraph();
       rotIndex = index;
-      delayShow(index, index*200)();
+      delayShow(index, index*100)();
     });
 
   }
@@ -92,7 +92,6 @@
     src: './font/Elements.ttf'
   });
 
-  var roti = 0;
   const rotv = 0.2;
 
   ws.onmessage = (event) => {
@@ -103,15 +102,14 @@
   function getAnimation(index) {
     let ii = illos[index]
     let f = () => {
-      roti += rotv;
       ii.rotate.y += rotv;
       ii.updateRenderGraph();
-      if (roti < 2 * pi) {
+      if (ii.rotate.y < 2 * pi) {
         requestAnimationFrame(f);
       }
-      else {
-        requestAnimationFrame(f);
-        roti = 0
+      else
+      {
+        ii.rotate.y = 0;
       }
     }
     return f
