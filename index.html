@@ -1,95 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
-<body>
-    <canvas class="zdog-canvas" width="600" height="480"></canvas>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
+
+<body id="zdog-body">
+  <canvas id="zdog-canvas" class="zdog-canvas" width="80" height="600"></canvas>
 </body>
 
 <script src="./js/zfont.min.js"></script>
 
 <script>
+  var ws = new WebSocket("ws://localhost:19002/ws");
 
-const pi = 3.141592654;
+  ws.onmessage = (event) => {
+    console.log(event.data)
+  };
 
-const cubeSize = 200;
+  var illos = new Array()
+  var zTexts = new Array()
+  function setText(txt) {
+    let i = 0
 
-const lineWidth = 15;
+    zTexts.forEach(element => {
+      element.value = '';
+    });
+    // illos = new Array()
+    // zTexts = new Array()
+    for (i = 0; i < txt.length; i++) {
 
-let isSpinning = true;
+      let zBody = document.getElementById('zdog-body');
 
-Zfont.init(Zdog);
+      let cloneNode = document.getElementById('zdog-canvas').cloneNode(true);
 
-let myFont = new Zdog.Font({
-  src: './font/Elements.ttf'
-});
+      if (document.getElementById("zdog-canvas" + i) === null) {
+        console.log('ddd');
+        cloneNode.setAttribute("class", "zdog-canvas" + i);
+        cloneNode.setAttribute("id", "zdog-canvas" + i);
+        zBody.appendChild(cloneNode);
 
-let illo = new Zdog.Illustration({
-  element: '.zdog-canvas',
-  dragRotate: true,
-  onDragStart: function() {
-    isSpinning = false;
-  },
-});
+        let illo = new Zdog.Illustration({
+          element: '.zdog-canvas' + i,
+          dragRotate: false,
+          onDragStart: function () {
+            isSpinning = false;
+          },
+        });
+        illos[i] = illo;
+        //set zfont
+        let zText = new Zdog.Text({
+          addTo: illos[i],
+          font: myFont,
+          textAlign: 'center',
+          textBaseline: 'middle',
+          stroke: 2,
+          value: txt.slice(i, i + 1),
+          fill: true,
+          fontSize: 100,
+          color: '#636'
+        });
+        zTexts[i] = zText;
+      }
+      else {
+        zTexts[i].value = txt.slice(i, i + 1)
+      }
+      console.log(txt.slice(i, i + 1));
+      // add illo to illos
 
-new Zdog.Text({
-  addTo: illo,
-  font: myFont,
-  textAlign: 'center',
-  textBaseline: 'middle',
-  stroke: 2,
-  value: 'wingbow',
-  fill:true,
-  fontSize: 100,
-  color: '#636'
-});
+    }
+  }
 
-new Zdog.Text({
-  addTo: illo,
-  font: myFont,
-  textAlign: 'center',
-  textBaseline: 'middle',
-  translate: {x: -0, y: 0, z: -10 },
-  stroke: 2,
-  value: 'wingbow',
-  fill:true,
-  fontSize: 100,
-  color: '#000'
-});
+  const pi = 3.141592654;
 
-// square
-//let box = new Zdog.Box({
-// addTo: illo,
-//  width: cubeSize,
-//  height: cubeSize,
-//  depth: cubeSize,
-//  stroke: false,
-//  color: '#C25', // default face color
-//  leftFace: '#EA0',
-//  rightFace: '#E62',
-//  topFace: '#ED0',
-//  bottomFace: '#636',
-//});
-var p = 0;
+  const cubeSize = 200;
 
-illo.rotate.x = pi/12;
+  const lineWidth = 15;
 
-function animate() {
-   
+  let isSpinning = true;
 
-            illo.rotate.y +=  0.01;
-            illo.updateRenderGraph();
-			illo.updateRenderGraph();
-			requestAnimationFrame(animate);
+  Zfont.init(Zdog);
 
+  let myFont = new Zdog.Font({
+    src: './font/Elements.ttf'
+  });
 
+  // let illo = new Zdog.Illustration({
+  //   element: '.zdog-canvas0',
+  //   dragRotate: true,
+  //   onDragStart: function () {
+  //     isSpinning = false;
+  //   },
+  // });
 
-}
-animate();
+  // let illo2 = new Zdog.Illustration({
+  //   element: '.zdog-canvas'+2,
+  //   dragRotate: true,
+  //   onDragStart: function () {
+  //     isSpinning = false;
+  //   },
+  // });
+
+  // var zText = new Zdog.Text({
+  //   addTo: illos[0],
+  //   font: myFont,
+  //   textAlign: 'center',
+  //   textBaseline: 'middle',
+  //   stroke: 2,
+  //   value: 'a',
+  //   fill: true,
+  //   fontSize: 100,
+  //   color: '#636'
+  // });
+
+  // var zText2 = new Zdog.Text({
+  //   addTo: illos[1],
+  //   font: myFont,
+  //   textAlign: 'center',
+  //   textBaseline: 'middle',
+  //   stroke: 2,
+  //   value: 'd',
+  //   fill: true,
+  //   fontSize: 100,
+  //   color: '#636'
+  // });
+
+  var roti = 0;
+  const rotv = 0.05;
+
+  function animate() {
+    roti += rotv;
+    illos[0].rotate.y += rotv;
+    illos[0].updateRenderGraph();
+    if (roti < 2 * pi) {
+      requestAnimationFrame(animate);
+    }
+    else {
+      roti = 0
+    }
+  }
+
+  setText('ggg')
+
+  setText('ag')
+
+  setText('wingbow')
+
+  function showText(ms) {
+    setTimeout(
+      () => {
+        animate();
+      }
+      , ms);
+  }
 
 </script>
+
 </html>
