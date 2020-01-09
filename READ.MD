@@ -1,0 +1,1 @@
+将python打包成exe `pyinstaller ./py/app.py --clean --distpath ./pydist
