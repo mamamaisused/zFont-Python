@@ -17,8 +17,10 @@
 <script>
   var ws = new WebSocket("ws://localhost:19002/ws");
 
-  var illos = new Array()
-  var zTexts = new Array()
+  var illos = new Array();
+  var zTexts = new Array();
+
+  var rotIndex = 0;
 
   function setText(txt) {
     let i = 0
@@ -60,17 +62,19 @@
           color: '#0B3872'
         });
         zTexts[i] = zText;
-        if(zText.value == ' ')zText.value = ""
+        if (zText.value == ' ') zText.value = ""
       }
       else {
         zTexts[i].value = c;
       }
       //console.log(txt.slice(i, i + 1));
       // add illo to illos
-      }
-      illos.forEach((element,index) => {
-        element.updateRenderGraph();
-      });
+    }
+    illos.forEach((element, index) => {
+      element.updateRenderGraph();
+      rotIndex = index;
+      delayShow(index, index*200)();
+    });
 
   }
 
@@ -89,33 +93,42 @@
   });
 
   var roti = 0;
-  const rotv = 0.05;
+  const rotv = 0.2;
 
   ws.onmessage = (event) => {
     console.log(event.data)
     setText(event.data);
   };
 
-  function animate() {
-    roti += rotv;
-    illos[0].rotate.y += rotv;
-    illos[0].updateRenderGraph();
-    if (roti < 2 * pi) {
-      requestAnimationFrame(animate);
+  function getAnimation(index) {
+    let ii = illos[index]
+    let f = () => {
+      roti += rotv;
+      ii.rotate.y += rotv;
+      ii.updateRenderGraph();
+      if (roti < 2 * pi) {
+        requestAnimationFrame(f);
+      }
+      else {
+        requestAnimationFrame(f);
+        roti = 0
+      }
     }
-    else {
-      roti = 0
+    return f
+  }
+
+  function delayShow(index, ms) {
+    let df = getAnimation(index);
+    return () => {
+      setTimeout(
+        () => {
+          df();
+        }
+        , ms);
     }
   }
 
   setText('Hello,World!');
-  function showText(ms) {
-    setTimeout(
-      () => {
-        animate();
-      }
-      , ms);
-  }
 
 </script>
 
