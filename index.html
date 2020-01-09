@@ -8,14 +8,29 @@
   <title>Document</title>
   <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
 
-<body id="zdog-body">
+<body id="zdog-body"
+  style="display: -webkit-flex;flex-wrap: wrap;align-items: center;align-content: center;height: 500px;">
   <canvas id="zdog-canvas" class="zdog-canvas" width="80" height="200"></canvas>
 </body>
 
 <script src="./js/zfont.min.js"></script>
 
 <script>
+
+  const Pink = "#FF88BB"
+  const Orange = "#DD5533"
+  const Purple = "#D200D2"
+  const Yellow = "#EECC03"
+  const Wingbow = "#0B3872"
+  const Red = "#FF0000"
+  const Green = "#00EC00"
+  const Cyan = "#4DFFFF"
+  const Blue = "#2894FF"
+
+  var Rainbow = new Array(Red, Orange, Yellow, Green, Cyan, Blue, Purple);
+
   var ws = new WebSocket("ws://localhost:19002/ws");
+  var illoColor = Orange
 
   var illos = new Array();
   var zTexts = new Array();
@@ -25,8 +40,38 @@
   function setText(txt) {
     let i = 0
 
+    switch (txt) {
+      case "Wingbow":
+        illoColor = Wingbow
+        break;
+      case "Orange":
+        illoColor = Orange
+        break;
+      case "Yellow":
+        illoColor = Yellow
+        break;
+      case "Pink":
+        illoColor = Pink
+        break;
+      case "Purple":
+        illoColor = Purple
+        break;
+      case "Red":
+        illoColor = Red
+        break;
+      case "Green":
+        illoColor = Green
+        break;
+      case "Blue":
+        illoColor = Blue
+        break;
+      default:
+        break;
+    }
+
     zTexts.forEach(element => {
       element.value = "";
+
     });
     // illos = new Array()
     // zTexts = new Array()
@@ -59,7 +104,7 @@
           value: c,
           fill: true,
           fontSize: 60,
-          color: '#0B3872'
+          color: illoColor
         });
         zTexts[i] = zText;
         if (zText.value == ' ') zText.value = ""
@@ -70,10 +115,16 @@
       //console.log(txt.slice(i, i + 1));
       // add illo to illos
     }
+
+    zTexts.forEach((element, index) => {
+      if (txt === "Rainbow") element.color = Rainbow[index];
+      else element.color = illoColor;
+    })
+
     illos.forEach((element, index) => {
       element.updateRenderGraph();
       rotIndex = index;
-      delayShow(index, index*100)();
+      delayShow(index, index * 100)();
     });
 
   }
@@ -107,8 +158,7 @@
       if (ii.rotate.y < 2 * pi) {
         requestAnimationFrame(f);
       }
-      else
-      {
+      else {
         ii.rotate.y = 0;
       }
     }
@@ -126,7 +176,7 @@
     }
   }
 
-  setText('Hello,World!');
+  //setText('Hello,World!');
 
 </script>
 

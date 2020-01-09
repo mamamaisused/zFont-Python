@@ -24,7 +24,10 @@ def startWsServer():
 
 def microbitLoop():
     Microbit.bringUp()
-    if(Microbit.openPort('COM9')):print("open com successfully")
+    with open( 'port.cfg', 'r' ) as f:
+        pname = f.read()
+        print(pname)
+        if(Microbit.openPort(pname)):print("open com successfully")
     idleCount = 0 #记录多长时间没有收到消息
     while True:
         time.sleep(0.01)
