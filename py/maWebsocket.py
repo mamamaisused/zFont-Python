@@ -47,7 +47,7 @@ WingbotLocalMsgParse
 class WingbotLocalMsgParse(WebSocket):
     def __init__(self, *args, **kargs):
         WebSocket.__init__(self, *args, **kargs)
-        
+        self.isAlive = True
         self._logger =logging.getLogger('python')
         self.comMessage = {
             "sender":"python",
@@ -62,11 +62,20 @@ class WingbotLocalMsgParse(WebSocket):
         print("_________init_________")
 
     def serialLoop(self):
-        while True:
+        while self.isAlive:
             time.sleep(0.01)
             if Microbit.state == 'DataReady':
                 Microbit.setIdle()
-                self.send(Microbit.getData())
+                m = Microbit.getData()
+                self._logger.info(m)
+                try:
+                    self.send(m)
+                except BaseException as e:
+                    self._logger.error(e)
+
+    def closed(self, code, reason=None):
+        self._logger.warning('websocket closed')
+        self.isAlive = False
 
     def received_message(self,message):
         self._logger.debug(message)

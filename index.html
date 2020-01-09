@@ -20,37 +20,11 @@
   var illos = new Array()
   var zTexts = new Array()
 
-  /**
-  @brief: 根据字符内容修改宽度
-  */
-  function updateWidth(index, c) {
-    let node = document.getElementById('zdog-canvas' + index);
-    if (node !== null) {
-      if (c === 'i' || c === 'l' || c === 'I') {
-        node.setAttribute("width", "40");
-      }
-      else if (c === 'w') {
-        node.setAttribute("width", "100");
-      }
-      else if (c === 'W') {
-        node.setAttribute("width", "115");
-      }
-      else if (c === ' ') {
-        c = null;
-        console.log('rrr')
-      }
-      else
-      {
-        node.setAttribute("width", "80");
-      }
-    }
-  }
-
   function setText(txt) {
     let i = 0
 
     zTexts.forEach(element => {
-      element.value = '';
+      element.value = "";
     });
     // illos = new Array()
     // zTexts = new Array()
@@ -65,7 +39,6 @@
         cloneNode.setAttribute("class", "zdog-canvas" + i);
         cloneNode.setAttribute("id", "zdog-canvas" + i);
         zBody.appendChild(cloneNode);
-        updateWidth(i, c);
         let illo = new Zdog.Illustration({
           element: '.zdog-canvas' + i,
           dragRotate: false,
@@ -83,20 +56,22 @@
           stroke: 2,
           value: c,
           fill: true,
-          fontSize: 90,
-          color: '#636'
+          fontSize: 60,
+          color: '#0B3872'
         });
         zTexts[i] = zText;
+        if(zText.value == ' ')zText.value = ""
       }
       else {
         zTexts[i].value = c;
       }
       //console.log(txt.slice(i, i + 1));
       // add illo to illos
+      }
       illos.forEach((element,index) => {
         element.updateRenderGraph();
       });
-    }
+
   }
 
   const pi = 3.141592654;
@@ -113,50 +88,8 @@
     src: './font/Elements.ttf'
   });
 
-  // let illo = new Zdog.Illustration({
-  //   element: '.zdog-canvas0',
-  //   dragRotate: true,
-  //   onDragStart: function () {
-  //     isSpinning = false;
-  //   },
-  // });
-
-  // let illo2 = new Zdog.Illustration({
-  //   element: '.zdog-canvas'+2,
-  //   dragRotate: true,
-  //   onDragStart: function () {
-  //     isSpinning = false;
-  //   },
-  // });
-
-  // var zText = new Zdog.Text({
-  //   addTo: illos[0],
-  //   font: myFont,
-  //   textAlign: 'center',
-  //   textBaseline: 'middle',
-  //   stroke: 2,
-  //   value: 'a',
-  //   fill: true,
-  //   fontSize: 100,
-  //   color: '#636'
-  // });
-
-  // var zText2 = new Zdog.Text({
-  //   addTo: illos[1],
-  //   font: myFont,
-  //   textAlign: 'center',
-  //   textBaseline: 'middle',
-  //   stroke: 2,
-  //   value: 'd',
-  //   fill: true,
-  //   fontSize: 100,
-  //   color: '#636'
-  // });
-
   var roti = 0;
   const rotv = 0.05;
-
-  setText('Hello, World!');
 
   ws.onmessage = (event) => {
     console.log(event.data)
@@ -175,10 +108,7 @@
     }
   }
 
-   //setText('ggg')
-
-  // setText('ag')
-
+  setText('Hello,World!');
   function showText(ms) {
     setTimeout(
       () => {
