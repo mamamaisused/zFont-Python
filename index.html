@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
 
 <body id="zdog-body">
-  <canvas id="zdog-canvas" class="zdog-canvas" width="80" height="600"></canvas>
+  <canvas id="zdog-canvas" class="zdog-canvas" width="80" height="200"></canvas>
 </body>
 
 <script src="./js/zfont.min.js"></script>
@@ -17,12 +17,35 @@
 <script>
   var ws = new WebSocket("ws://localhost:19002/ws");
 
-  ws.onmessage = (event) => {
-    console.log(event.data)
-  };
-
   var illos = new Array()
   var zTexts = new Array()
+
+  /**
+  @brief: 根据字符内容修改宽度
+  */
+  function updateWidth(index, c) {
+    let node = document.getElementById('zdog-canvas' + index);
+    if (node !== null) {
+      if (c === 'i' || c === 'l' || c === 'I') {
+        node.setAttribute("width", "40");
+      }
+      else if (c === 'w') {
+        node.setAttribute("width", "100");
+      }
+      else if (c === 'W') {
+        node.setAttribute("width", "115");
+      }
+      else if (c === ' ') {
+        c = null;
+        console.log('rrr')
+      }
+      else
+      {
+        node.setAttribute("width", "80");
+      }
+    }
+  }
+
   function setText(txt) {
     let i = 0
 
@@ -37,12 +60,12 @@
 
       let cloneNode = document.getElementById('zdog-canvas').cloneNode(true);
 
+      let c = txt.slice(i, i + 1); //提取单个字符
       if (document.getElementById("zdog-canvas" + i) === null) {
-        console.log('ddd');
         cloneNode.setAttribute("class", "zdog-canvas" + i);
         cloneNode.setAttribute("id", "zdog-canvas" + i);
         zBody.appendChild(cloneNode);
-
+        updateWidth(i, c);
         let illo = new Zdog.Illustration({
           element: '.zdog-canvas' + i,
           dragRotate: false,
@@ -58,19 +81,21 @@
           textAlign: 'center',
           textBaseline: 'middle',
           stroke: 2,
-          value: txt.slice(i, i + 1),
+          value: c,
           fill: true,
-          fontSize: 100,
+          fontSize: 90,
           color: '#636'
         });
         zTexts[i] = zText;
       }
       else {
-        zTexts[i].value = txt.slice(i, i + 1)
+        zTexts[i].value = c;
       }
-      console.log(txt.slice(i, i + 1));
+      //console.log(txt.slice(i, i + 1));
       // add illo to illos
-
+      illos.forEach((element,index) => {
+        element.updateRenderGraph();
+      });
     }
   }
 
@@ -131,6 +156,13 @@
   var roti = 0;
   const rotv = 0.05;
 
+  setText('Hello, World!');
+
+  ws.onmessage = (event) => {
+    console.log(event.data)
+    setText(event.data);
+  };
+
   function animate() {
     roti += rotv;
     illos[0].rotate.y += rotv;
@@ -143,11 +175,9 @@
     }
   }
 
-  setText('ggg')
+   //setText('ggg')
 
-  setText('ag')
-
-  setText('wingbow')
+  // setText('ag')
 
   function showText(ms) {
     setTimeout(

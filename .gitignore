@@ -1,3 +1,4 @@
 font/*
 *.min.js
 *.dist.js
+*.log*
