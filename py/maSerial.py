@@ -18,6 +18,7 @@ class maPorts:
         self.port.baudrate = 9600
         self.port.timeout = 3
         self.state = "Idle"
+        self.isConnected = False #串口是否连接成功
     
     def bringUp(self):
         self.portList = list()
@@ -35,6 +36,7 @@ class maPorts:
             if not self.port.is_open:
                 self.port.open()
                 self._logger.info('open port %s success.'%name)
+                self.isConnected = True
                 return True
             else:
                 self._logger.info('port %s is already open.'%name)

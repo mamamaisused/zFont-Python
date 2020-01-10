@@ -61,6 +61,16 @@ class WingbotLocalMsgParse(WebSocket):
         self._serialThread.start()
         print("_________init_________")
 
+    def opened(self):
+        """
+        Called by the server when the upgrade handshake
+        has succeeded.
+        """
+        if Microbit.isConnected == True:
+            self.send('ready')
+        else:
+            self.send('not ready')
+
     def serialLoop(self):
         while self.isAlive:
             time.sleep(0.01)
