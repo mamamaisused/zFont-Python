@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>wingbow</title>
   <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
 
 <body id="zdog-body"
   style="display: -webkit-flex;flex-wrap: wrap;align-items: center;align-content: center;height: 500px;">
-  <canvas id="zdog-canvas" class="zdog-canvas" width="80" height="200"></canvas>
+  <canvas id="zdog-canvas" class="zdog-canvas" width="80" height="100"></canvas>
 </body>
 
 <script src="./js/zfont.min.js"></script>
@@ -26,11 +26,12 @@
   const Green = "#00EC00"
   const Cyan = "#4DFFFF"
   const Blue = "#2894FF"
+  const Black = "000"
 
   var Rainbow = new Array(Red, Orange, Yellow, Green, Cyan, Blue, Purple);
 
   var ws = new WebSocket("ws://localhost:19002/ws");
-  var illoColor = Orange
+  var illoColor = Black
 
   var illos = new Array();
   var zTexts = new Array();
@@ -64,6 +65,9 @@
         break;
       case "Blue":
         illoColor = Blue
+        break;
+      case "Black":
+        illoColor = Black
         break;
       default:
         break;

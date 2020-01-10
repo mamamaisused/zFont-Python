@@ -24,16 +24,22 @@ def startWsServer():
 
 def microbitLoop():
     Microbit.bringUp()
-    with open( 'port.cfg', 'r' ) as f:
+    try:
+        f = open( 'port.cfg', 'r' )
         pname = f.read()
-        print(pname)
-        if(Microbit.openPort(pname)):print("open com successfully")
-    idleCount = 0 #记录多长时间没有收到消息
-    while True:
-        time.sleep(0.01)
-        if(Microbit.port.in_waiting > 0):
-            idleCount = 0
-            Microbit.readline()
+        logging.info(pname)
+        if(Microbit.openPort(pname)):
+            logging.info("open com successfully")
+            idleCount = 0 #记录多长时间没有收到消息
+            while True:
+                time.sleep(0.01)
+                if(Microbit.port.in_waiting > 0):
+                    idleCount = 0
+                    Microbit.readline()
+        else:
+            logging.warning("open com failed")
+    except BaseException as e:
+        logging.error(e.strerror)
 
 if __name__ == '__main__':
     initLogger()
